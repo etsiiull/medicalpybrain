@@ -3,7 +3,6 @@ from __future__ import division
 from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.tools.shortcuts import buildNetwork
-from pybrain.utilities import percentError
 import numpy as np
 import pylab as pl
 import math as ma
@@ -52,7 +51,7 @@ net = buildNetwork(numColsTrain-1, numHiddenNodes, 2, bias=True)
 
 #Crear el trainer y hacer enternar el DS
 trainer = BackpropTrainer(net, trainDS, learningrate=myLearningRate, momentum=myMomentum)
-trainError = trainer.trainUntilConvergence(verbose=True, trainingData=trainDS, validationData=validDS)
+trainError = trainer.trainUntilConvergence(verbose=True, trainingData=trainDS, validationData=validDS, maxEpochs=100)
 
 #Crear la gráfica con los errores de validación y entrenamiento
 pl.plot(trainError[0], label='Train Error')
