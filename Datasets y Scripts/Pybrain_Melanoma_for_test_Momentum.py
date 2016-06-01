@@ -9,10 +9,10 @@ import pylab as pl
 import math as ma
 import csv
 
-#Leer las bases de datos 
-patternTrain = np.loadtxt("BreastCancerPreprocessedTrain.csv", dtype=float, delimiter=',')
-patternValid = np.loadtxt("BreastCancerPreprocessedValid.csv", dtype=float, delimiter=',')
-patternTest = np.loadtxt("BreastCancerPreprocessedTest.csv", dtype=float, delimiter=',')
+#Read training sets
+patternTrain = np.loadtxt("MelanomaTrainPreprocessed.csv", dtype=float, delimiter=',')
+patternValid = np.loadtxt("MelanomaValidPreprocessed.csv", dtype=float, delimiter=',')
+patternTest = np.loadtxt("MelanomaTestPreprocessed.csv", dtype=float, delimiter=',')
 
 #Conseguir el numero de filas y columnas
 numPatTrain, numColsTrain = patternTrain.shape
@@ -45,11 +45,11 @@ for i in range(numPatTest):
 	patternTestTarget[i, patternTest[i, 0]] = 1.0
 	testDS.addSample(patternTestInput[i], patternTestTarget[i])
 
-resultados = np.zeros((50,9))
+resultados = np.zeros((45,9))
 myMomentum = 0.1
 counterOut = 0
 minError = 0.13
-while(myMomentum < 1):
+while(myMomentum < 0.9):
 	counter = 0
 	while(counter < 5):	
 		#Crear red con una capa oculta
@@ -142,6 +142,6 @@ while(myMomentum < 1):
 	
 	myMomentum = myMomentum + 0.1
 	
-with open('resultsBreastMomentum.csv', 'w', newline='') as fp:
+with open('resultsMelonomaMomentum.csv', 'w', newline='') as fp:
 	writer = csv.writer(fp, delimiter=',')
 	writer.writerows(resultados)

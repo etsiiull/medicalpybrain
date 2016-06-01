@@ -45,11 +45,11 @@ for i in range(numPatTest):
 	patternTestTarget[i, patternTest[i, 0]] = 1.0
 	testDS.addSample(patternTestInput[i], patternTestTarget[i])
 
-resultados = np.zeros((50,9))
+resultados = np.zeros((45,9))
 myMomentum = 0.1
 counterOut = 0
 minError = 0.13
-while(myMomentum < 1):
+while(myMomentum < 0.9):
 	counter = 0
 	while(counter < 5):	
 		#Crear red con una capa oculta
