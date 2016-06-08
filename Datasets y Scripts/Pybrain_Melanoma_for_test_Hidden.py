@@ -10,9 +10,9 @@ import math as ma
 import csv
 
 #Read training sets
-patternTrain = np.loadtxt("RespiratorySystemCancerPreprocessedTrain.csv")
-patternValid = np.loadtxt("RespiratorySystemCancerPreprocessedValid.csv")
-patternTest = np.loadtxt("RespiratorySystemCancerPreprocessedTest.csv")
+patternTrain = np.loadtxt("MelanomaTrainPreprocessed.csv", dtype=float, delimiter=',')
+patternValid = np.loadtxt("MelanomaValidPreprocessed.csv", dtype=float, delimiter=',')
+patternTest = np.loadtxt("MelanomaTestPreprocessed.csv", dtype=float, delimiter=',')
 
 #Conseguir el numero de filas y columnas
 numPatTrain, numColsTrain = patternTrain.shape
@@ -45,7 +45,7 @@ for i in range(numPatTest):
 	patternTestTarget[i, patternTest[i, 0]] = 1.0
 	testDS.addSample(patternTestInput[i], patternTestTarget[i])
 
-resultados = np.zeros((100,7))
+resultados = np.zeros((100,6))
 numHiddenNodes = 5
 while(numHiddenNodes < 101):
 	counter = 0
@@ -84,44 +84,29 @@ while(numHiddenNodes < 101):
 			elif (patternValid[i, 0] == 0 and patternValid[i, 0] != patResult):
 				falsoPositivo = falsoPositivo + 1
 			
-		print("Nodos ocultos: %d" % numHiddenNodes)
+		print("Nº de Neuronas ocultas: %d" % numHiddenNodes)
+		print("Iteracion: %d" % counter)
+		print("\n")
+		
 		print("Positivo: %d" % positivo)
 		print("Negativo: %d" % negativo)
 		print("Falso Positivo: %d" % falsoPositivo)
 		print("Falso Negativo: %d" % falsoNegativo)
 		print("\n")
 
-		positivoTotal = positivo + falsoNegativo
-		negativoTotal = negativo + falsoPositivo
+		sensibilidad = positivo / (positivo + falsoNegativo)
+		especificidad = negativo /(negativo + falsoPositivo)
 
-		percentPositivo = positivo / positivoTotal * 100
-		percentNegativo = negativo / negativoTotal * 100
-		percentFalsoPositivo = falsoPositivo / negativoTotal * 100
-		percentFalsoNegativo = falsoNegativo / positivoTotal * 100
-		accuracy = ((positivo + negativo) / numPatValid) * 100
-		recall = (positivo / positivoTotal) * 100
-		if(positivo == 0 and falsoPositivo == 0):
-			precision = 0
-		else:
-			precision = (positivo / (positivo + falsoPositivo)) * 100
-
-		print("Porcentaje de aciertos positivos: %3.2f%%" % percentPositivo)
-		print("Porcentaje de falsos negativos: %3.2f%%" % percentFalsoNegativo)
-		print("Porcentaje de aciertos negativos: %3.2f%%" % percentNegativo)
-		print("Porcentaje de falsos positivos: %3.2f%%" % percentFalsoPositivo)
-		print("\n")
-
-		print("Accuracy: %3.2f%%" % accuracy)
-		print("Recall: %3.2f%%" % recall)
-		print("Precision: %3.2f%%" % precision)
+		print("Sensibilidad: %1.3f" % sensibilidad)
+		print("Especificidad: %1.3f" % especificidad)
 		
-		result_array = [positivo, negativo, falsoPositivo, falsoNegativo, accuracy, recall, precision]
+		result_array = [positivo, negativo, falsoPositivo, falsoNegativo, sensibilidad, especificidad]
 		resultados[numHiddenNodes - 5 + counter] = result_array
 		
 		counter = counter + 1
 	
 	numHiddenNodes = numHiddenNodes + 5
 	
-with open('resultsRespiratory.csv', 'w', newline='') as fp:
+with open('resultsMelanomaHidden.csv', 'w', newline='') as fp:
 	writer = csv.writer(fp, delimiter=',')
 	writer.writerows(resultados)

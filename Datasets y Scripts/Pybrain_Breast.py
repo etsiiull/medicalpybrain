@@ -91,23 +91,10 @@ print("Falso Positivo: %d" % falsoPositivo)
 print("Falso Negativo: %d" % falsoNegativo)
 print("\n")
 
-positivoTotal = positivo + falsoNegativo
-negativoTotal = negativo + falsoPositivo
+accuracy = (positivo + negativo) / numPatTest
+sensibilidad = positivo / (positivo + falsoNegativo)
+especificidad = negativo /(negativo + falsoPositivo)
 
-percentPositivo = positivo / positivoTotal * 100
-percentNegativo = negativo / negativoTotal * 100
-percentFalsoPositivo = falsoPositivo / negativoTotal * 100
-percentFalsoNegativo = falsoNegativo / positivoTotal * 100
-accuracy = ((positivo + negativo) / numPatValid) * 100
-recall = (positivo / positivoTotal) * 100
-precision = (positivo / (positivo + falsoPositivo)) * 100
-
-print("Porcentaje de aciertos positivos: %3.2f%%" % percentPositivo)
-print("Porcentaje de falsos negativos: %3.2f%%" % percentFalsoNegativo)
-print("Porcentaje de aciertos negativos: %3.2f%%" % percentNegativo)
-print("Porcentaje de falsos positivos: %3.2f%%" % percentFalsoPositivo)
-print("\n")
-
-print("Accuracy: %3.2f%%" % accuracy)
-print("Recall: %3.2f%%" % recall)
-print("Precision: %3.2f%%" % precision)
+print("Accuracy : %1.3f" % accuracy)
+print("Sensibilidad: %1.3f" % sensibilidad)
+print("Especificidad: %1.3f" % especificidad)
