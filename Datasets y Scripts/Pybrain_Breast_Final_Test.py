@@ -45,7 +45,7 @@ for i in range(numPatTest):
 	patternTestTarget[i, patternTest[i, 0]] = 1.0
 	testDS.addSample(patternTestInput[i], patternTestTarget[i])
 
-resultados = np.zeros((10,6))
+
 myMaxEpochs = 150
 counterOut = 0
 while(counterOut < 10):
@@ -57,10 +57,10 @@ while(counterOut < 10):
 
 		#Crear el trainer y hacer enternar el DS
 		trainer = BackpropTrainer(net, trainDS, learningrate=myLearningRate, momentum=myMomentum)
-		trainError = trainer.trainUntilConvergence(verbose=True, trainingData=trainDS, validationData=validDS, maxEpochs=myMaxEpochs)
+		trainError = trainer.trainUntilConvergence(verbose=True, trainingData=trainDS, validationData=testDS, maxEpochs=myMaxEpochs)
 
 		#Obtener porcentajes
-		results = net.activateOnDataset(validDS)
+		results = net.activateOnDataset(testDS)
 
 		patResult = -1
 		positivo = 0
@@ -68,19 +68,19 @@ while(counterOut < 10):
 		falsoPositivo = 0
 		falsoNegativo = 0
 
-		for i in range(numPatValid):
+		for i in range(numPatTest):
 			if max(results[i]) == results[i, 0]:
 				patResult = 0
 			else:
 				patResult = 1
 		
-			if (patternValid[i, 0] == 1 and patternValid[i, 0] == patResult):
+			if (patternTest[i, 0] == 1 and patternTest[i, 0] == patResult):
 				positivo = positivo + 1
-			elif (patternValid[i, 0] == 0 and patternValid[i, 0] == patResult):
+			elif (patternTest[i, 0] == 0 and patternTest[i, 0] == patResult):
 				negativo = negativo + 1
-			elif (patternValid[i, 0] == 1 and patternValid[i, 0] != patResult):
+			elif (patternTest[i, 0] == 1 and patternTest[i, 0] != patResult):
 				falsoNegativo = falsoNegativo + 1
-			elif (patternValid[i, 0] == 0 and patternValid[i, 0] != patResult):
+			elif (patternTest[i, 0] == 0 and patternTest[i, 0] != patResult):
 				falsoPositivo = falsoPositivo + 1
 		
 		print("Iteracion: %d" % counterOut)
@@ -99,9 +99,6 @@ while(counterOut < 10):
 		print("Accuracy : %1.3f" % accuracy)
 		print("Sensibilidad: %1.3f" % sensibilidad)
 		print("Especificidad: %1.3f" % especificidad)
-		
-		result_array = [positivo, negativo, falsoPositivo, falsoNegativo, sensibilidad, especificidad]
-		resultados[counterOut] = result_array
 		
 		counterOut = counterOut + 1
 		

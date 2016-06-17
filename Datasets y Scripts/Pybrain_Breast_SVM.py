@@ -30,31 +30,28 @@ patternValidTarget = np.zeros([numPatValid, 2])
 patternTestTarget = np.zeros([numPatTest, 2])
 
 #Crear los dataset supervisados
-trainDS = ClassificationDataSet(numColsTrain-1, 2)
+trainDS = ClassificationDataSet(numColsTrain-1, nb_classes=2, class_labels=['Not_Cancer', 'Cancer'])
 for i in range(numPatTrain):
-	patternTrainTarget[i, patternTrain[i, 0]] = 1.0
-	trainDS.addSample(patternTrainInput[i], patternTrainTarget[i])
+	trainDS.appendLinked(patternTrainInput[i], patternTrain[i, 0])
 	
-validDS = ClassificationDataSet(numColsValid-1, 2)
+validDS = ClassificationDataSet(numColsTrain-1, nb_classes=2, class_labels=['Not_Cancer', 'Cancer'])
 for i in range(numPatValid):
-	patternValidTarget[i, patternValid[i, 0]] = 1.0
-	validDS.addSample(patternValidInput[i], patternValidTarget[i])
+	validDS.appendLinked(patternValidInput[i], patternValid[i, 0])
 	
-testDS = ClassificationDataSet(numColsTest-1, 2)
+testDS = ClassificationDataSet(numColsTrain-1, nb_classes=2, class_labels=['Not_Cancer', 'Cancer'])
 for i in range(numPatTest):
-	patternTestTarget[i, patternTest[i, 0]] = 1.0
-	testDS.addSample(patternTestInput[i], patternTestTarget[i])
+	testDS.appendLinked(patternTestInput[i], patternTest[i, 0])
 
 #Crear la SVM y el trainer
 svm = SVMUnit()
 trainer = SVMTrainer(svm, trainDS)
 
 #Parámetros de la SVM
-myLog2C	= 0.
-myLog2g = 1.1
+myLog2C=0.
+myLog2g=1.1
 
 #Entrenar la red
-trainError = trainer.train(log2C=myLog2C, log2g = myLog2g)
+trainer.train(log2g=myLog2g, log2C=myLog2C)
 
 #
 trnresult = percentError( svm.activateOnDataset(trndata), trndata['target'] )
