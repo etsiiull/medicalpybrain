@@ -44,9 +44,9 @@ for i in range(numPatTest):
 	testDS.addSample(patternTestInput[i], patternTestTarget[i])
 
 #Crear red con una capa oculta
-numHiddenNodes = 25
-myLearningRate = 0.0001
-myMomentum = 0.1
+numHiddenNodes = 50
+myLearningRate = 0.005
+myMomentum = 0.2
 net = buildNetwork(numColsTrain-1, numHiddenNodes, 2, bias=True)
 
 #Crear el trainer y hacer enternar el DS
@@ -63,6 +63,7 @@ pl.show()
 
 #Obtener porcentajes
 results = net.activateOnDataset(validDS)
+print("Results: %s" % results)
 
 patResult = -1
 positivo = 0
