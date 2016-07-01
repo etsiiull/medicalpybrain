@@ -10,9 +10,9 @@ import pylab as pl
 import math as ma
 
 #Leer las bases de datos 
-patternTrain = np.loadtxt("BreastCancerKohonenTrain.csv", dtype=float, delimiter=',')
-patternValid = np.loadtxt("BreastCancerKohonenValid.csv", dtype=float, delimiter=',')
-patternTest = np.loadtxt("BreastCancerKohonenTest.csv", dtype=float, delimiter=',')
+patternTrain = np.loadtxt("BreastCancerNormalizeTrain.csv", dtype=float, delimiter=',')
+patternValid = np.loadtxt("BreastCancerNormalizeValid.csv", dtype=float, delimiter=',')
+patternTest = np.loadtxt("BreastCancerNormalizeTest.csv", dtype=float, delimiter=',')
 
 #Conseguir el numero de filas y columnas
 numPatTrain, numColsTrain = patternTrain.shape
@@ -38,7 +38,7 @@ for i in range(numPatValid):
 for i in range(numPatTest):
 	patternTestTarget[i] = patternTest[i, 0]
 
-neuronas = 7	
+neuronas = 14	
 	
 #Crear y entrenar el mapa autoorganizado
 som = KohonenMap(numColsTrain-1, neuronas)
@@ -83,8 +83,8 @@ for i in range(numPatValid):
 	kohonenValidDS.addSample(input[i], patternValidTarget[i])
 	
 #Crear la red para el backprop
-myLearningRate = 0.005
-myMomentum = 0.5
+myLearningRate = 0.05
+myMomentum = 0.9
 net = buildNetwork(neuronas**2, 1, outclass=SigmoidLayer, bias=True)
 
 #Crear el trainer y entrenarlo con los DS

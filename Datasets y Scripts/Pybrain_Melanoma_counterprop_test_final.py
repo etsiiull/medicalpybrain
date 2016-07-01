@@ -10,9 +10,9 @@ import pylab as pl
 import math as ma
 
 #Leer las bases de datos 
-patternTrain = np.loadtxt("MelanomaKohonenTrain.csv", dtype=float, delimiter=',')
-patternValid = np.loadtxt("MelanomaKohonenValid.csv", dtype=float, delimiter=',')
-patternTest = np.loadtxt("MelanomaKohonenTest.csv", dtype=float, delimiter=',')
+patternTrain = np.loadtxt("MelanomaNormalizeTrain.csv", dtype=float, delimiter=',')
+patternValid = np.loadtxt("MelanomaNormalizeValid.csv", dtype=float, delimiter=',')
+patternTest = np.loadtxt("MelanomaNormalizeTest.csv", dtype=float, delimiter=',')
 
 #Conseguir el numero de filas y columnas
 numPatTrain, numColsTrain = patternTrain.shape
@@ -40,7 +40,7 @@ for i in range(numPatTest):
 
 counterOut = 0
 while(counterOut < 10):
-	neuronas = 6
+	neuronas = 11
 	#Crear y entrenar el mapa autoorganizado
 	som = KohonenMap(numColsTrain-1, neuronas)
 	

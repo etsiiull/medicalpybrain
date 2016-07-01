@@ -11,9 +11,9 @@ import math as ma
 import csv
 
 #Leer las bases de datos 
-patternTrain = np.loadtxt("BreastCancerKohonenTrain.csv", dtype=float, delimiter=',')
-patternValid = np.loadtxt("BreastCancerKohonenValid.csv", dtype=float, delimiter=',')
-patternTest = np.loadtxt("BreastCancerKohonenTest.csv", dtype=float, delimiter=',')
+patternTrain = np.loadtxt("BreastCancerNormalizeTrain.csv", dtype=float, delimiter=',')
+patternValid = np.loadtxt("BreastCancerNormalizeValid.csv", dtype=float, delimiter=',')
+patternTest = np.loadtxt("BreastCancerNormalizeTest.csv", dtype=float, delimiter=',')
 
 #Conseguir el numero de filas y columnas
 numPatTrain, numColsTrain = patternTrain.shape
@@ -38,16 +38,15 @@ for i in range(numPatValid):
 	
 for i in range(numPatTest):
 	patternTestTarget[i] = patternTest[i, 0]
-
-neuronas = 14	
 	
-resultados = np.zeros((50,9))
-myMomentum = 0.1
+resultados = np.zeros((30,9))
+myLearningRate = 0.0001
 counterOut = 0
-while(myMomentum < 1):
+while(myLearningRate < 0.09):
 	counter = 0
 	while(counter < 5):
 		#Crear y entrenar el mapa autoorganizado
+		neuronas = 6
 		som = KohonenMap(numColsTrain-1, neuronas)
 	
 		#Entrenar el mapa	
@@ -84,8 +83,8 @@ while(myMomentum < 1):
 			kohonenValidDS.addSample(input[i], patternValidTarget[i])
 	
 		#Crear la red para el backprop
-		myLearningRate = 0.05
-		#myMomentum = 0.5
+		#myLearningRate = 0.05
+		myMomentum = 0.5
 		net = buildNetwork(neuronas**2, 1, outclass=SigmoidLayer, bias=True)
 
 		#Crear el trainer y entrenarlo con los DS
@@ -118,7 +117,7 @@ while(myMomentum < 1):
 			elif (patternValid[i, 0] == 0 and patternValid[i, 0] != patResult):
 				falsoPositivo = falsoPositivo + 1
 			
-		print("Momentum: %1.1f" % myMomentum)
+		print("Learning Rate: %1.4f" % myLearningRate)
 		print("Iteracion: %d" % counter)
 		print("\n")
 		
@@ -128,8 +127,8 @@ while(myMomentum < 1):
 		print("Falso Negativo: %d" % falsoNegativo)
 		print("\n")
 		
-		minError = 0.07
-		#C?lculo del numero de iteraciones antes de llegar al 0,13 de error.
+		minError = 0.13
+		#C?lculo del numero de iteraciones antes de llegar al 0,07 de error.
 		iteracionesTrain = -1
 		iteracionesValid = -1
 		for i in range(len(trainError[0])):
@@ -154,8 +153,19 @@ while(myMomentum < 1):
 		counter += 1
 		counterOut += 1
 		
-	myMomentum += 0.1
+	if(myLearningRate == 0.0001):
+		myLearningRate = 0.0005
+	elif(myLearningRate == 0.0005):
+		myLearningRate = 0.001
+	elif(myLearningRate == 0.001):
+		myLearningRate = 0.005
+	elif(myLearningRate == 0.005):
+		myLearningRate = 0.01
+	elif(myLearningRate == 0.01):
+		myLearningRate = 0.05
+	elif(myLearningRate == 0.05):
+		myLearningRate = 0.1
 	
-with open('resultsBreastMomentumCounterprop.csv', 'w', newline='') as fp:
+with open('resultsBreastLRCounterprop.csv', 'w', newline='') as fp:
 	writer = csv.writer(fp, delimiter=',')
 	writer.writerows(resultados)

@@ -9,10 +9,10 @@ import pylab as pl
 import math as ma
 import csv
 
-#Read training sets
-patternTrain = np.loadtxt("MelanomaTrainPreprocessed.csv", dtype=float, delimiter=',')
-patternValid = np.loadtxt("MelanomaValidPreprocessed.csv", dtype=float, delimiter=',')
-patternTest = np.loadtxt("MelanomaTestPreprocessed.csv", dtype=float, delimiter=',')
+#Leer las bases de datos 
+patternTrain = np.loadtxt("MelanomaNormalizeTrain.csv", dtype=float, delimiter=',')
+patternValid = np.loadtxt("MelanomaNormalizeValid.csv", dtype=float, delimiter=',')
+patternTest = np.loadtxt("MelanomaNormalizeTest.csv", dtype=float, delimiter=',')
 
 #Conseguir el numero de filas y columnas
 numPatTrain, numColsTrain = patternTrain.shape
@@ -25,27 +25,27 @@ patternValidInput = patternValid[:, 1:numColsValid]
 patternTestInput = patternTest[:, 1:numColsTest]
 
 #Generar salidas deseadas 
-patternTrainTarget = np.zeros([numPatTrain, 2])
-patternValidTarget = np.zeros([numPatValid, 2])
-patternTestTarget = np.zeros([numPatTest, 2])
+patternTrainTarget = np.zeros([numPatTrain])
+patternValidTarget = np.zeros([numPatValid])
+patternTestTarget = np.zeros([numPatTest])
 
 #Crear los dataset supervisados
-trainDS = SupervisedDataSet(numColsTrain-1, 2)
+trainDS = SupervisedDataSet(numColsTrain-1, 1)
 for i in range(numPatTrain):
-	patternTrainTarget[i, patternTrain[i, 0]] = 1.0
+	patternTrainTarget[i] = patternTrain[i, 0]
 	trainDS.addSample(patternTrainInput[i], patternTrainTarget[i])
 	
-validDS = SupervisedDataSet(numColsValid-1, 2)
+validDS = SupervisedDataSet(numColsValid-1, 1)
 for i in range(numPatValid):
-	patternValidTarget[i, patternValid[i, 0]] = 1.0
+	patternValidTarget[i] = patternValid[i, 0]
 	validDS.addSample(patternValidInput[i], patternValidTarget[i])
 	
-testDS = SupervisedDataSet(numColsTest-1, 2)
+testDS = SupervisedDataSet(numColsTest-1, 1)
 for i in range(numPatTest):
-	patternTestTarget[i, patternTest[i, 0]] = 1.0
+	patternTestTarget[i] = patternTest[i, 0]
 	testDS.addSample(patternTestInput[i], patternTestTarget[i])
 
-resultados = np.zeros((100,6))
+resultados = np.zeros((100,7))
 numHiddenNodes = 5
 while(numHiddenNodes < 101):
 	counter = 0
@@ -54,7 +54,7 @@ while(numHiddenNodes < 101):
 		#numHiddenNodes = 25
 		myLearningRate = 0.0001
 		myMomentum = 0.1
-		net = buildNetwork(numColsTrain-1, numHiddenNodes, 2, bias=True)
+		net = buildNetwork(numColsTrain-1, numHiddenNodes, 1, bias=True)
 
 		#Crear el trainer y hacer enternar el DS
 		trainer = BackpropTrainer(net, trainDS, learningrate=myLearningRate, momentum=myMomentum)
@@ -69,8 +69,9 @@ while(numHiddenNodes < 101):
 		falsoPositivo = 0
 		falsoNegativo = 0
 
+		threshold = 0.45
 		for i in range(numPatValid):
-			if max(results[i]) == results[i, 0]:
+			if results[i] <= threshold:
 				patResult = 0
 			else:
 				patResult = 1
@@ -94,13 +95,15 @@ while(numHiddenNodes < 101):
 		print("Falso Negativo: %d" % falsoNegativo)
 		print("\n")
 
+		accuracy = (positivo + negativo) / numPatTest
 		sensibilidad = positivo / (positivo + falsoNegativo)
 		especificidad = negativo /(negativo + falsoPositivo)
 
+		print("Accuracy : %1.3f" % accuracy)
 		print("Sensibilidad: %1.3f" % sensibilidad)
 		print("Especificidad: %1.3f" % especificidad)
 		
-		result_array = [positivo, negativo, falsoPositivo, falsoNegativo, sensibilidad, especificidad]
+		result_array = [positivo, negativo, falsoPositivo, falsoNegativo, accuracy, sensibilidad, especificidad]
 		resultados[numHiddenNodes - 5 + counter] = result_array
 		
 		counter = counter + 1

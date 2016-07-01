@@ -11,9 +11,9 @@ import math as ma
 import csv
 
 #Leer las bases de datos 
-patternTrain = np.loadtxt("MelanomaKohonenTrain.csv", dtype=float, delimiter=',')
-patternValid = np.loadtxt("MelanomaKohonenValid.csv", dtype=float, delimiter=',')
-patternTest = np.loadtxt("MelanomaKohonenTest.csv", dtype=float, delimiter=',')
+patternTrain = np.loadtxt("MelanomaNormalizeTrain.csv", dtype=float, delimiter=',')
+patternValid = np.loadtxt("MelanomaNormalizeValid.csv", dtype=float, delimiter=',')
+patternTest = np.loadtxt("MelanomaNormalizeTest.csv", dtype=float, delimiter=',')
 
 #Conseguir el numero de filas y columnas
 numPatTrain, numColsTrain = patternTrain.shape
@@ -127,7 +127,7 @@ while(myLearningRate < 0.09):
 		print("Falso Negativo: %d" % falsoNegativo)
 		print("\n")
 		
-		minError = 0.07
+		minError = 0.13
 		#C?lculo del numero de iteraciones antes de llegar al 0,07 de error.
 		iteracionesTrain = -1
 		iteracionesValid = -1

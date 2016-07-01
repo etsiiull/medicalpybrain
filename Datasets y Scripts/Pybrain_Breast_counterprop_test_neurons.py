@@ -11,9 +11,9 @@ import math as ma
 import csv
 
 #Leer las bases de datos 
-patternTrain = np.loadtxt("BreastCancerKohonenTrain.csv", dtype=float, delimiter=',')
-patternValid = np.loadtxt("BreastCancerKohonenValid.csv", dtype=float, delimiter=',')
-patternTest = np.loadtxt("BreastCancerKohonenTest.csv", dtype=float, delimiter=',')
+patternTrain = np.loadtxt("BreastCancerPreprocessedTrain.csv", dtype=float, delimiter=',')
+patternValid = np.loadtxt("BreastCancerPreprocessedValid.csv", dtype=float, delimiter=',')
+patternTest = np.loadtxt("BreastCancerPreprocessedTest.csv", dtype=float, delimiter=',')
 
 #Conseguir el numero de filas y columnas
 numPatTrain, numColsTrain = patternTrain.shape
@@ -38,8 +38,6 @@ for i in range(numPatValid):
 	
 for i in range(numPatTest):
 	patternTestTarget[i] = patternTest[i, 0]
-
-neuronas = 7	
 	
 resultados = np.zeros((55,7))
 neuronas = 5

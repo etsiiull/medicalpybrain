@@ -10,9 +10,9 @@ import pylab as pl
 import math as ma
 
 #Leer las bases de datos 
-patternTrain = np.loadtxt("RespiratorySystemCancerKohonenTrain.csv", dtype=float, delimiter=',')
-patternValid = np.loadtxt("RespiratorySystemCancerKohonenValid.csv", dtype=float, delimiter=',')
-patternTest = np.loadtxt("RespiratorySystemCancerKohonenTest.csv", dtype=float, delimiter=',')
+patternTrain = np.loadtxt("RespiratoryCancerNormalizeTrain.csv", dtype=float, delimiter=',')
+patternValid = np.loadtxt("RespiratoryCancerNormalizeValid.csv", dtype=float, delimiter=',')
+patternTest = np.loadtxt("RespiratoryCancerNormalizeTest.csv", dtype=float, delimiter=',')
 
 #Conseguir el numero de filas y columnas
 numPatTrain, numColsTrain = patternTrain.shape
